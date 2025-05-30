@@ -1,0 +1,41 @@
+### Create Login ###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "username": "emanuel",
+  "password": "123"
+}
+
+### Login ###
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123"
+}
+
+> {%
+  client.global.set("accessToken", response.body.accessToken);
+%}
+
+### Create Tweet ###
+POST http://localhost:8080/tweets
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "content": "emanuel tweet"
+}
+
+### Public feed ###
+GET http://localhost:8080/public-feed
+
+### Delete Tweet ###
+DELETE http://localhost:8080/tweets/53
+Authorization: Bearer {{accessToken}}
+
+### Get Users ###
+GET http://localhost:8080/users
+Authorization: Bearer {{accessToken}}
