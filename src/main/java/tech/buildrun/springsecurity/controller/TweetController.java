@@ -24,17 +24,50 @@ import tech.buildrun.springsecurity.entities.Tweet;
 import tech.buildrun.springsecurity.repository.TweetRepository;
 import tech.buildrun.springsecurity.repository.UserRepository;
 
+/**
+ * Controlador REST responsável por operações CRUD relacionadas aos Tweets.
+ * 
+ * Permite criar, deletar tweets e consultar o feed paginado de tweets.
+ * 
+ * Utiliza autenticação JWT para validar permissões e identificar o usuário.
+ * 
+ * @author Emanuel
+ */
 @RestController
 public class TweetController {
+
+  /**
+   * Repositório para persistência e recuperação de tweets.
+   */
   private final TweetRepository tweetRepository;
 
+  /**
+   * Repositório para acesso a dados de usuários.
+   */
   private final UserRepository userRepository;
 
+  /**
+   * Construtor com injeção dos repositórios necessários.
+   * 
+   * @param tweetRepository repositório de tweets.
+   * @param userRepository  repositório de usuários.
+   */
   public TweetController(TweetRepository tweetRepository, UserRepository userRepository) {
     this.tweetRepository = tweetRepository;
     this.userRepository = userRepository;
   }
 
+  /**
+   * Endpoint HTTP POST para criação de um novo tweet.
+   * 
+   * Recebe um DTO com conteúdo do tweet e o token JWT autenticado do usuário.
+   * Cria um tweet associado ao usuário autenticado.
+   * 
+   * @param createTweetDto DTO contendo o conteúdo do tweet.
+   * @param token          token JWT autenticado contendo identificação do
+   *                       usuário.
+   * @return resposta HTTP 200 OK sem corpo.
+   */
   @PostMapping("/tweets")
   public ResponseEntity<Void> createTweet(@RequestBody CreateTweetDto createTweetDto, JwtAuthenticationToken token) {
     var user = userRepository.findById(UUID.fromString(token.getName()));
@@ -48,6 +81,18 @@ public class TweetController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * Endpoint HTTP DELETE para remoção de um tweet por seu ID.
+   * 
+   * Permite que apenas o autor do tweet ou um usuário com role ADMIN possa
+   * deletar.
+   * 
+   * @param tweetId ID do tweet a ser deletado.
+   * @param token   token JWT autenticado do usuário que faz a requisição.
+   * @return resposta HTTP 200 OK se deletado com sucesso, 403 Forbidden se
+   *         usuário não autorizado,
+   *         ou 404 Not Found se o tweet não existir.
+   */
   @DeleteMapping("/tweets/{id}")
   public ResponseEntity<Void> deleteTweet(@PathVariable("id") Long tweetId, JwtAuthenticationToken token) {
 
@@ -67,6 +112,18 @@ public class TweetController {
     }
   }
 
+  /**
+   * Endpoint HTTP GET para retornar o feed paginado de tweets ordenados por data
+   * de criação decrescente.
+   * 
+   * Os parâmetros de paginação são opcionais e possuem valores padrão: page = 0 e
+   * pageSize = 10.
+   * 
+   * @param page     número da página a ser consultada (zero-based).
+   * @param pageSize quantidade de tweets por página.
+   * @return um objeto {@link FeedDto} contendo a lista de tweets e metadados da
+   *         paginação.
+   */
   @GetMapping("/feed")
   public ResponseEntity<FeedDto> feed(@RequestParam(value = "page", defaultValue = "0") int page,
       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
