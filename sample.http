@@ -16,14 +16,9 @@ Content-Type: application/json
   "password": "123"
 }
 
-> {%
-  client.global.set("accessToken", response.body.accessToken);
-%}
-
 ### Create Tweet ###
 POST http://localhost:8080/tweets
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
 
 {
   "content": "emanuel tweet"
@@ -34,8 +29,7 @@ GET http://localhost:8080/public-feed
 
 ### Delete Tweet ###
 DELETE http://localhost:8080/tweets/53
-Authorization: Bearer {{accessToken}}
 
 ### Get Users ###
 GET http://localhost:8080/users
-Authorization: Bearer {{accessToken}}
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJteWJhY2tlbmQiLCJzdWIiOiI1Yzg1Y2VhMi03MzM3LTQ2NjAtYWQ5Yi1jODEzZjljOTllMjEiLCJleHAiOjE3NDg4NzU1NDYsImlhdCI6MTc0ODg3NTI0Niwic2NvcGUiOiJhZG1pbiJ9.Br2ZoWGC7Hz7ZrTy0MrMx4ZXJnFnk4rBN2ccJdlLud4hTySIaubGfFcHc7JC9HITnE4icGYSueo0Il9epGc6y-iWWsOrjs-zSDRXplASMFv2YEte9byTIrsFLwffgbc5kx5OKCHfiNU6UHsgDYWaVx3YgGz2BHJFzYzwSAKTGoQhsKcYblEMWYl8kMpv0xx-JksuBb4Mb6zTunBC5xJSsvtsGuHw75IZPi6-u0kgKqD9AmCzosFhn3JTRcuHx-pdOLwni_uakaL9poZ9-gjAqnJwUM3zvS7684CNwCUvYs8I1WCVcKDi2-TNINiS0Cpz2-1SRVDfKmNU3fOuiKsk8Q

@@ -1,7 +1,6 @@
 package tech.buildrun.springsecurity.controller;
 
 import java.time.Instant;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
@@ -48,15 +47,15 @@ public class TokenController {
 
     var scopes = user.get().getRoles()
         .stream()
-        .map(Role::getName)
+        .map(role -> role.getName().toUpperCase())
         .collect(Collectors.joining(" "));
 
     var claims = JwtClaimsSet
         .builder()
         .issuer("mybackend")
         .subject(user.get().getUserId().toString())
-        .expiresAt(now.plusSeconds(expiresIn))
         .issuedAt(now)
+        .expiresAt(now.plusSeconds(expiresIn))
         .claim("scope", scopes)
         .build();
 

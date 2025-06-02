@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 docker/mysql-data
+SpringSecurituy
 ### STS ###
 .apt_generated
 .classpath
